@@ -1440,8 +1440,15 @@ public final class GsmMmiCode extends Handler implements MmiCode {
         //      {2} is time in seconds
 
         destinations[0] = serviceClassToCFString(info.serviceClass & serviceClassMask);
-        destinations[1] = formatLtr(
-                PhoneNumberUtils.stringFromStringAndTOA(info.number, info.toa));
+        // If call forwarding is active, will check whether info.number can be used
+        // If info.number can not be used, use to "unknown"
+        if (info.status == 1 && isEmptyOrNull(info.number)) {
+            destinations[1] = mContext.getText(com.android.internal.R.string.unknownName);
+        } else {
+            destinations[1] = formatLtr(
+                                PhoneNumberUtils.stringFromStringAndTOA(info.number, info.toa));
+        }
+
         destinations[2] = Integer.toString(info.timeSeconds);
 
         if (info.reason == CommandsInterface.CF_REASON_UNCONDITIONAL &&
