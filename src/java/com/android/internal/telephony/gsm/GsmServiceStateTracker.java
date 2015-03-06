@@ -609,6 +609,9 @@ final class GsmServiceStateTracker extends ServiceStateTracker {
         } else if (mSS.getVoiceRegState() == ServiceState.STATE_IN_SERVICE) {
             // In either home or roaming service
             plmn = mSS.getOperatorAlphaLong();
+            if (TextUtils.isEmpty(plmn)) {
+                plmn = mSS.getOperatorAlphaShort();
+            }
             showPlmn = !TextUtils.isEmpty(plmn) &&
                     ((rule & SIMRecords.SPN_RULE_SHOW_PLMN)
                             == SIMRecords.SPN_RULE_SHOW_PLMN);
