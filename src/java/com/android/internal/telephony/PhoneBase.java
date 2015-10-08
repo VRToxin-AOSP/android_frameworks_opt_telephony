@@ -1640,6 +1640,16 @@ public abstract class PhoneBase extends Handler implements Phone {
     }
 
     @Override
+    public void initiateUnsolOemHookRaw(Handler h, int what, Object obj) {
+        mCi.setOnUnsolOemHookRaw(h, what, obj);
+    }
+
+    @Override
+    public void releaseUnsolOemHookRaw(Handler h) {
+        mCi.unSetOnUnsolOemHookRaw(h);
+    }
+
+    @Override
     public void nvReadItem(int itemID, Message response) {
         mCi.nvReadItem(itemID, response);
     }

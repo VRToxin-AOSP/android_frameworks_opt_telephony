@@ -1410,6 +1410,37 @@ public interface Phone {
      */
     SimulatedRadioControl getSimulatedRadioControl();
 
+   /**
+    * initiates RIL_UNSOL_OEM_HOOK_RAW on RIL implementation.
+    * specific to oems hook libraries to use to accomplish communication
+    * from native ril to android ril and provide further communication to
+    * java application layer.
+    *
+    * @param Handler h
+    *          MessageHandler which is part of client application
+    *          which will monitor for event id (int what)
+    * @param int what
+    *          Event Id on which client will be interested to get a
+    *          unsolicited request
+    * @param Object obj not used
+    *
+    */
+    void initiateUnsolOemHookRaw(Handler h, int what, Object obj);
+
+   /**
+    * Releases the object created for unsolicited communication
+    * The application which calls InitiateUnsolOemHookRaw should call
+    * this function to release when application no longer need unsol-
+    * cited communication from the native and the android RIL.
+    *
+    * @param Handler h
+    *          MessageHandler which is part of client application
+    *          which will monitor for event id (int what)
+    *
+    * @return void
+    */
+    public void releaseUnsolOemHookRaw(Handler h);
+
     /**
      * Report on whether data connectivity is allowed.
      */

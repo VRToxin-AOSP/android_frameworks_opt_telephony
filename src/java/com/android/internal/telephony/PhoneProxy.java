@@ -991,6 +991,16 @@ public class PhoneProxy extends Handler implements Phone {
     }
 
     @Override
+    public void initiateUnsolOemHookRaw(Handler h, int what, Object obj) {
+        mActivePhone.initiateUnsolOemHookRaw(h, what, obj);
+    }
+
+    @Override
+    public void releaseUnsolOemHookRaw(Handler h) {
+        mActivePhone.releaseUnsolOemHookRaw(h);
+    }
+
+    @Override
     public void getDataCallList(Message response) {
         mActivePhone.getDataCallList(response);
     }
