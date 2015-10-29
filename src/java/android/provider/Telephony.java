@@ -2446,19 +2446,7 @@ public final class Telephony {
              * Primary key.
              * <P>Type: INTEGER (long)</P>
              */
-            public static final String ID = "_id";
-
-            /**
-             * Source row ID.
-             * <P>Type: INTEGER (long)</P>
-             */
-            public static final String SOURCE_ROW_ID = "source_id";
-
-            /**
-             * Table ID (either 1 or 2).
-             * <P>Type: INTEGER</P>
-             */
-            public static final String TABLE_ID = "table_to_use";
+            public static final String ID = "rowid";
 
             /**
              * The words to index.
