@@ -686,29 +686,35 @@ public final class ImsPhoneMmiCode extends Handler implements MmiCode {
 
     boolean
     isSupportedOverImsPhone() {
-        if (isShortCode()) return true;
-        else if (mDialingNumber != null) return false;
-        else if (isServiceCodeCallForwarding(mSc)
-                || isServiceCodeCallBarring(mSc)
-                || (mSc != null && mSc.equals(SC_WAIT))
-                || (mSc != null && mSc.equals(SC_CLIR))
-                || (mSc != null && mSc.equals(SC_CLIP))
-                || (mSc != null && mSc.equals(SC_COLR))
-                || (mSc != null && mSc.equals(SC_COLP))
-                || (mSc != null && mSc.equals(SC_BS_MT))
-                || (mSc != null && mSc.equals(SC_BAICa))) {
+        try {
+            if (isShortCode()) return true;
+            else if (mDialingNumber != null) return false;
+            else if (isServiceCodeCallForwarding(mSc)
+                     || isServiceCodeCallBarring(mSc)
+                     || (mSc != null && mSc.equals(SC_WAIT))
+                     || (mSc != null && mSc.equals(SC_CLIR))
+                     || (mSc != null && mSc.equals(SC_CLIP))
+                     || (mSc != null && mSc.equals(SC_COLR))
+                     || (mSc != null && mSc.equals(SC_COLP))
+                     || (mSc != null && mSc.equals(SC_BS_MT))
+                     || (mSc != null && mSc.equals(SC_BAICa))) {
 
-            int serviceClass = siToServiceClass(mSib);
-            if (serviceClass != SERVICE_CLASS_NONE
+                int serviceClass = siToServiceClass(mSib);
+                if (serviceClass != SERVICE_CLASS_NONE
                     && serviceClass != SERVICE_CLASS_VOICE) {
+                    return false;
+                }
+                return true;
+            } else if (isPinPukCommand()
+                       || (mSc != null
+                           && (mSc.equals(SC_PWD) || mSc.equals(SC_CLIP) || mSc.equals(SC_CLIR)))) {
                 return false;
-            }
-            return true;
-        } else if (isPinPukCommand()
-                || (mSc != null
-                    && (mSc.equals(SC_PWD) || mSc.equals(SC_CLIP) || mSc.equals(SC_CLIR)))) {
-            return false;
-        } else if (mPoundString != null) return true;
+            } else if (mPoundString != null) return true;
+        } catch (RuntimeException rex) {
+            mState = State.FAILED;
+            mMessage = mContext.getText(com.android.internal.R.string.mmiError);
+            mPhone.onMMIDone(this);
+        }
 
         return false;
     }
