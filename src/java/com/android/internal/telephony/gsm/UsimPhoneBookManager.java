@@ -208,9 +208,12 @@ public class UsimPhoneBookManager extends Handler implements IccConstants {
                     Rlog.e(LOG_TAG, "Error: Improper ICC card: No IAP record for ADN, continuing");
                     break;
                 }
-                int recNum = record[mEmailTagNumberInIap];
 
-                if (recNum != -1) {
+                if ((record[mEmailTagNumberInIap] & 0xFF) != 0xFF) {
+                    // The most significant bit becomes 1 if the record number is more than 127.
+                    // We have to be careful NOT to make a negative record number here.
+                    int recNum = record[mEmailTagNumberInIap] & 0xFF;
+
                     String[] emails = new String[1];
                     // SIM record numbers are 1 based
                     emails[0] = readEmailRecord(recNum - 1);
@@ -264,11 +267,14 @@ public class UsimPhoneBookManager extends Handler implements IccConstants {
                 Rlog.e(LOG_TAG, "Error: Improper ICC card: No email record for ADN, continuing");
                 break;
             }
-            int adnRecNum = emailRec[emailRec.length - 1];
 
-            if (adnRecNum == -1) {
+            if ((emailRec[emailRec.length - 1] & 0xFF) == 0xFF) {
                 continue;
             }
+
+            // The most significant bit becomes 1 if the record number is more than 127.
+            // We have to be careful NOT to make a negative record number here.
+            int adnRecNum = emailRec[emailRec.length - 1] & 0xFF;
 
             String email = readEmailRecord(i);
 
