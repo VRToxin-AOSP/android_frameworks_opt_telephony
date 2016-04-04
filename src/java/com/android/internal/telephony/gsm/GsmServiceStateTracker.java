@@ -57,6 +57,7 @@ import android.text.TextUtils;
 import android.util.EventLog;
 import android.util.TimeUtils;
 
+import com.android.internal.telephony.CapitalTimeZoneUtil;
 import com.android.internal.telephony.CommandException;
 import com.android.internal.telephony.CommandsInterface;
 import com.android.internal.telephony.EventLogTags;
@@ -1215,6 +1216,17 @@ final class GsmServiceStateTracker extends ServiceStateTracker {
                                    " testOneUniqueOffsetPath=" + testOneUniqueOffsetPath);
                         }
                         setAndBroadcastNetworkSetTimeZone(zone.getID());
+                    // An optional solution for multi timezones country.
+                    } else if (uniqueZones.size() > 1 && mPhone.getContext().getResources().getBoolean(
+                            com.android.internal.R.bool.config_use_capital_timezone)){
+                        zone = CapitalTimeZoneUtil.getDefaultTimezoneByIso(iso);
+                        if (zone != null){
+                            setAndBroadcastNetworkSetTimeZone(zone.getID());
+                            if (DBG) log("pollStateDone: no nitz but get capital city TZ by iso-cc=" + iso +
+                                    " with zone.getID=" + zone.getID());
+                        } else {
+                            if (DBG) log("pollStateDone: no nitz and no defualt TZ for iso-cc= " + iso);
+                        }
                     } else {
                         if (DBG) {
                             log("pollStateDone: there are " + uniqueZones.size() +
