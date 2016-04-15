@@ -970,6 +970,11 @@ public final class DataConnection extends StateMachine {
                     default:
                 }
             }
+            if (!mDct.getDataEnabled()) {
+                // if allow MMS when mobile data off, after MMS finish
+                // NetworkCapabilities needs to be restored.
+                result.removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
+            }
             result.maybeMarkCapabilitiesRestricted();
         }
         int up = 14;
